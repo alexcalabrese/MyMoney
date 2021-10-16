@@ -19,13 +19,16 @@
                 font-family: 'Nunito', sans-serif;
             }
         </style>
+
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
+
     </head>
     <body class="antialiased">
         <div id="app">
-            <example-component>Nice</example-component>
+
          </div>
         
 
-        <script src="{{ mix('js/app.js') }}"</script>
+        <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
