@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResources([
     'transactions' => TransactionController::class,
-    'transactionTypes' => TransactionTypeController::class,
-    'categories' => Category::class
+    'categories' => Category::class,
+    'labels' => LabelController::class,
+    'methods' => MethodController::class,
+    'states' => StateTypeController::class,
+    'timings' => TimingController::class
 ]);
