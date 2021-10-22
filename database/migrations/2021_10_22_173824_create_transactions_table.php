@@ -18,7 +18,17 @@ class CreateTransactionsTable extends Migration
             $table->integer('total');
             $table->string('notes');
             $table->date('date');
+            
+            $table->foreignId('category_id');
+            $table->foreignId('state_id');
+            $table->foreignId('timing_id');
+            $table->foreignId('method_id');
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('state_id')->references('id')->on('states')->onDelete('cascade');
+            $table->foreign('timing_id')->references('id')->on('timings')->onDelete('cascade');
+            $table->foreign('method_id')->references('id')->on('methods')->onDelete('cascade');
         });
     }
 

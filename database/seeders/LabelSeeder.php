@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class TransactionSeeder extends Seeder
+class LabelSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +13,16 @@ class TransactionSeeder extends Seeder
      */
     public function run()
     {
+        \DB::table('labels')->insert([
+            'name' => 'A Carico Famiglia',
+            'created_at' => now()
+        ]);
+
+        \DB::table('labels')->insert([
+            'name' => 'Spesa Extra Risparmio',
+            'created_at' => now()
+        ]);
+
         \DB::table('labels')->insert([
             'name' => 'Spesa Personale',
             'created_at' => now()
