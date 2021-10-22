@@ -18,4 +18,24 @@ class Transaction extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    public function timing()
+    {
+        return $this->belongsTo(Timing::class);
+    }
+
+    public function method()
+    {
+        return $this->belongsTo(Method::class);
+    }
+
+    public function labels()
+    {
+        return $this->belongsToMany(Label::class);
+    }
 }
