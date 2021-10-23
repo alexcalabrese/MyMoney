@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
+use App\Http\Resources\TransactionResource;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -13,7 +15,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        return TransactionResource::collection(Transaction::all());
     }
 
     /**
@@ -59,5 +61,41 @@ class TransactionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function totalCosts()
+    {
+        return Transaction::where('type', '-')->sum('total');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function totalEarnings()
+    {
+        return Transaction::where('type', '+')->sum('total');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function totalBalance()
+    {
+        $costs = $this->totalCosts();
+        $earnings = $this->totalEarnings();
+
+        return $earnings - $costs;
     }
 }
