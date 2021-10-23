@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    protected $fillable = ['total', 'notes', 'date', 'type', 'category_id', 'state_id', 'timing_id', 'method_id', 'created_at'];
+
     use HasFactory;
 
     public function category()
