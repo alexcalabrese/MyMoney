@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\TransactionController;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +17,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::get('/transactions', function () {
+    return Transaction::all();
+});
+
+Route::prefix('transactions')->group(function () {
+    Route::get('totalCosts', [TransactionController::class, 'totalCosts']);
+    Route::get('totalEarnings', [TransactionController::class, 'totalEarnings']);
+    Route::get('totalBalance', [TransactionController::class, 'totalBalance']);
 });
 
 Route::apiResources([
