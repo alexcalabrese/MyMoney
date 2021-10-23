@@ -5,7 +5,7 @@
 				<div class="flex justify-content-between mb-3">
 					<div>
 						<span class="block text-500 font-medium mb-3">Costs</span>
-						<div class="text-900 font-medium text-xl">152</div>
+						<div class="text-900 font-medium text-xl">-{{ stats.totalCosts }} €</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-pink-800 border-round" style="width:2.5rem;height:2.5rem">
 						<i class="pi pi-shopping-cart text-pink-500 text-xl"></i>
@@ -20,7 +20,7 @@
 				<div class="flex justify-content-between mb-3">
 					<div>
 						<span class="block text-500 font-medium mb-3">Earnings</span>
-						<div class="text-900 font-medium text-xl">$2.100</div>
+						<div class="text-900 font-medium text-xl">+{{ stats.totalEarnings }} €</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-green-800 border-round" style="width:2.5rem;height:2.5rem">
 						<i class="pi pi-euro text-green-500 text-xl"></i>
@@ -35,7 +35,7 @@
 				<div class="flex justify-content-between mb-3">
 					<div>
 						<span class="block text-500 font-medium mb-3">Balance</span>
-						<div class="text-900 font-medium text-xl">152 Unread</div>
+						<div class="text-900 font-medium text-xl">{{ stats.totalBalance }} €</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-purple-800 border-round" style="width:2.5rem;height:2.5rem">
 						<i class="pi pi-wallet text-purple-500 text-xl"></i>
@@ -67,14 +67,15 @@
 	<div class="col-12 xl:col-12">
 		<div class="card">
 			<h5>Latest Transactions</h5>
-			<DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
-				<Column field="name" header="Name" :sortable="true" style="width:35%"></Column>
-				<Column field="category" header="Name" :sortable="true" style="width:35%"></Column>
-				<Column field="price" header="Price" :sortable="true" style="width:35%">
+			<DataTable :value="transactions" :rows="5" >
+				<Column field="readableTotal" header="Total" :sortable="true" style="width:35%">
 					<template #body="slotProps">
-						{{formatCurrency(slotProps.data.price)}}
+						{{formatCurrency(slotProps.data.total, slotProps.data.type)}}
 					</template>
 				</Column>
+				<Column field="category" header="Category" :sortable="true" style="width:35%"></Column>
+				<Column field="date" header="Date" :sortable="true" style="width:35%"></Column>
+				<Column field="notes" header="Notes" :sortable="true" style="width:35%"></Column>
 				<Column style="width:15%">
 					<template #header>
 						View
@@ -223,13 +224,19 @@
 </template>
 
 <script>
-import ProductService from '../service/ProductService';
+import TransactionService from '../service/TransactionService';
 
 export default {
 	data() {
 		return {
 			currentMonth: null,
-			products: null,
+			transactionService: null,
+			transactions: null,
+			stats: {
+				totalCosts: null,
+				totalEarnings: null,
+				totalBalance: null,
+			},
 			lineData: {
 				labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 				datasets: [
@@ -257,23 +264,26 @@ export default {
             ]
 		}
 	},
-	productService: null,
 	created() {
-		this.productService = new ProductService();
+		this.transactionService = new TransactionService();
 		this.currentMonth = this.getCurrentMonth();
-		console.log(this.currentMonth);
+		// console.log(this.currentMonth);
 	},
 	mounted() {
-		this.productService.getProductsSmall().then(data => this.products = data);
+		this.transactionService.getTransactions().then(data => this.transactions = data);
+		this.transactionService.getTotalEarnings().then(data => this.stats.totalEarnings = data);
+		this.transactionService.getTotalCosts().then(data => this.stats.totalCosts = data);
+		this.transactionService.getTotalBalance().then(data => this.stats.totalBalance = data);
 	},
 	methods: {
-		formatCurrency(value) {
-			return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+		formatCurrency(value, type) {
+			return type + value.toLocaleString('it-IT', {style: 'currency', currency: 'EUR'});
 		},
+
 		getCurrentMonth(){
 			const today = new Date();
 			return today.getMonth() + "/" + today.getFullYear();
-		}
+		},
 	}
 }
 </script>
