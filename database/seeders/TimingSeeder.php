@@ -14,7 +14,22 @@ class TimingSeeder extends Seeder
     public function run()
     {
         \DB::table('timings')->insert([
-            'name' => 'Annuale',
+            'name' => 'One Time',
+            'created_at' => now()
+        ]);
+
+        \DB::table('timings')->insert([
+            'name' => 'Giornaliera',
+            'created_at' => now()
+        ]);
+
+        \DB::table('timings')->insert([
+            'name' => 'Settimanale',
+            'created_at' => now()
+        ]);
+        
+        \DB::table('timings')->insert([
+            'name' => 'Mensile',
             'created_at' => now()
         ]);
 
@@ -29,18 +44,17 @@ class TimingSeeder extends Seeder
         ]);
 
         \DB::table('timings')->insert([
-            'name' => 'Mensile',
+            'name' => 'Annuale',
             'created_at' => now()
         ]);
 
-        \DB::table('timings')->insert([
-            'name' => 'Settimanale',
-            'created_at' => now()
-        ]);
+        
 
-        \DB::table('timings')->insert([
-            'name' => 'Giornaliera',
-            'created_at' => now()
-        ]);
+        
+
+
+        
+
+        
     }
 }

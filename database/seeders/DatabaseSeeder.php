@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             MethodSeeder::class,
             StateSeeder::class,
             TimingSeeder::class,
+            TransactionSeeder::class,
         ]);
     }
 }
