@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\TreeResource;
 
 class CategoryController extends Controller
 {
@@ -13,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return CategoryResource::collection(Category::all());
     }
 
     /**
@@ -59,5 +62,10 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getTree()
+    {
+        return TreeResource::collection(Category::all());
     }
 }

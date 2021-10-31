@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TreeResource;
+use App\Models\Timing;
 use Illuminate\Http\Request;
 
 class TimingController extends Controller
@@ -59,5 +61,10 @@ class TimingController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getTree()
+    {
+        return TreeResource::collection(Timing::all());
     }
 }

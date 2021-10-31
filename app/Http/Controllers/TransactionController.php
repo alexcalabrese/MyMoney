@@ -26,7 +26,40 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'total'         => 'required',
+            'date'          => 'required',
+            'type'          => 'required',
+            'category_id'   => 'required',
+            'state_id'      => 'required',
+            'timing_id'     => 'required',
+            'method_id'     => 'required',
+        ]);
+
+
+        $total = $request->total;
+        $notes = $request->notes;
+        $date = $request->date;
+        $type = $request->type;
+        $category_id = $request->category_id;
+        $state_id = $request->state_id;
+        $timing_id = $request->timing_id;
+        $method_id = $request->method_id;
+
+        $transaction = Transaction::create([
+            'total' => $total,
+            'notes' => $notes,
+            'date' => date("Y-m-d", strtotime($date)),
+            'type' => $type,
+            'category_id' => $category_id,
+            'state_id' => $state_id,
+            'timing_id' => $timing_id,
+            'method_id' => $method_id,
+            'created_at' => now(),
+        ]);
+
+
+        return response(200);
     }
 
     /**

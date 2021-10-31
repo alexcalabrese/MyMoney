@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TreeResource;
+use App\Models\Method;
 use Illuminate\Http\Request;
 
 class MethodController extends Controller
@@ -59,5 +61,10 @@ class MethodController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getTree()
+    {
+        return TreeResource::collection(Method::all());
     }
 }

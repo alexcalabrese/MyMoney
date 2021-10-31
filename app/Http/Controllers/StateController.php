@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\TreeResource;
+use App\Models\State;
 
 class StateController extends Controller
 {
@@ -59,5 +61,10 @@ class StateController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getTree()
+    {
+        return TreeResource::collection(State::all());
     }
 }
