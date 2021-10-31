@@ -1329,7 +1329,7 @@
   background: #FFE082;
 }
 .p-password-panel .p-password-meter .p-password-strength.strong {
-  background: #C5E1A5;
+  background: #66bb6a;
 }
 
 .p-radiobutton {
@@ -1857,51 +1857,51 @@
 
 .p-button.p-button-success, .p-buttonset.p-button-success > .p-button, .p-splitbutton.p-button-success > .p-button {
   color: #121212;
-  background: #C5E1A5;
-  border: 1px solid #C5E1A5;
+  background: #66bb6a;
+  border: 1px solid #66bb6a;
 }
 .p-button.p-button-success:enabled:hover, .p-buttonset.p-button-success > .p-button:enabled:hover, .p-splitbutton.p-button-success > .p-button:enabled:hover {
-  background: #b2d788;
+  background: #388e3c;
   color: #121212;
-  border-color: #b2d788;
+  border-color: #388e3c;
 }
 .p-button.p-button-success:enabled:focus, .p-buttonset.p-button-success > .p-button:enabled:focus, .p-splitbutton.p-button-success > .p-button:enabled:focus {
   box-shadow: 0 0 0 1px #d6eac0;
 }
 .p-button.p-button-success:enabled:active, .p-buttonset.p-button-success > .p-button:enabled:active, .p-splitbutton.p-button-success > .p-button:enabled:active {
-  background: #9fce6b;
+  background: #388e3c;
   color: #121212;
-  border-color: #9fce6b;
+  border-color: #388e3c;
 }
 .p-button.p-button-success.p-button-outlined, .p-buttonset.p-button-success > .p-button.p-button-outlined, .p-splitbutton.p-button-success > .p-button.p-button-outlined {
   background-color: transparent;
-  color: #C5E1A5;
+  color: #66bb6a;
   border: 1px solid;
 }
 .p-button.p-button-success.p-button-outlined:enabled:hover, .p-buttonset.p-button-success > .p-button.p-button-outlined:enabled:hover, .p-splitbutton.p-button-success > .p-button.p-button-outlined:enabled:hover {
   background: rgba(197, 225, 165, 0.04);
-  color: #C5E1A5;
+  color: #66bb6a;
   border: 1px solid;
 }
 .p-button.p-button-success.p-button-outlined:enabled:active, .p-buttonset.p-button-success > .p-button.p-button-outlined:enabled:active, .p-splitbutton.p-button-success > .p-button.p-button-outlined:enabled:active {
   background: rgba(197, 225, 165, 0.16);
-  color: #C5E1A5;
+  color: #66bb6a;
   border: 1px solid;
 }
 .p-button.p-button-success.p-button-text, .p-buttonset.p-button-success > .p-button.p-button-text, .p-splitbutton.p-button-success > .p-button.p-button-text {
   background-color: transparent;
-  color: #C5E1A5;
+  color: #66bb6a;
   border-color: transparent;
 }
 .p-button.p-button-success.p-button-text:enabled:hover, .p-buttonset.p-button-success > .p-button.p-button-text:enabled:hover, .p-splitbutton.p-button-success > .p-button.p-button-text:enabled:hover {
   background: rgba(197, 225, 165, 0.04);
   border-color: transparent;
-  color: #C5E1A5;
+  color: #66bb6a;
 }
 .p-button.p-button-success.p-button-text:enabled:active, .p-buttonset.p-button-success > .p-button.p-button-text:enabled:active, .p-splitbutton.p-button-success > .p-button.p-button-text:enabled:active {
   background: rgba(197, 225, 165, 0.16);
   border-color: transparent;
-  color: #C5E1A5;
+  color: #66bb6a;
 }
 
 .p-button.p-button-warning, .p-buttonset.p-button-warning > .p-button, .p-splitbutton.p-button-warning > .p-button {
@@ -5178,7 +5178,7 @@
   color: #ffffff;
 }
 .p-badge.p-badge-success {
-  background-color: #C5E1A5;
+  background-color: #66bb6a;
   color: #121212;
 }
 .p-badge.p-badge-info {
@@ -5303,7 +5303,7 @@
   border-radius: 3px;
 }
 .p-tag.p-tag-success {
-  background-color: #C5E1A5;
+  background-color: #66bb6a;
   color: #121212;
 }
 .p-tag.p-tag-info {
