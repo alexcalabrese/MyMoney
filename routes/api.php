@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\StateController;
+use App\Http\Controllers\LabelController;
+use App\Http\Controllers\MethodController;
+use App\Http\Controllers\TimingController;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -31,9 +36,25 @@ Route::prefix('transactions')->group(function () {
     Route::get('totalBalance', [TransactionController::class, 'totalBalance']);
 });
 
+Route::prefix('categories')->group(function () {
+    Route::get('tree', [CategoryController::class, 'getTree']);
+});
+
+Route::prefix('states')->group(function () {
+    Route::get('tree', [StateController::class, 'getTree']);
+});
+
+Route::prefix('timings')->group(function () {
+    Route::get('tree', [TimingController::class, 'getTree']);
+});
+
+Route::prefix('methods')->group(function () {
+    Route::get('tree', [MethodController::class, 'getTree']);
+});
+
 Route::apiResources([
     'transactions' => TransactionController::class,
-    'categories' => Category::class,
+    'categories' => CategoryController::class,
     'labels' => LabelController::class,
     'methods' => MethodController::class,
     'states' => StateTypeController::class,
