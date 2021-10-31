@@ -90,6 +90,7 @@ import Tooltip from 'primevue/tooltip';
 import ToggleButton from 'primevue/togglebutton';
 import Tree from 'primevue/tree';
 import TreeTable from 'primevue/treetable';
+import TreeSelect from 'primevue/treeselect';
 import TriStateCheckbox from 'primevue/tristatecheckbox';
 
 import CodeHighlight from './AppCodeHighlight';
@@ -101,7 +102,7 @@ router.beforeEach(function(to, from, next) {
 
 const app = createApp(App);
 
-app.config.globalProperties.$appState = reactive({ theme: 'saga-blue' });
+app.config.globalProperties.$appState = reactive({ theme: 'saga-purple' });
 
 app.use(PrimeVue, { ripple: true, inputStyle: 'outlined' });
 app.use(ConfirmationService);
@@ -189,6 +190,7 @@ app.component('Toolbar', Toolbar);
 app.component('ToggleButton', ToggleButton);
 app.component('Tree', Tree);
 app.component('TreeTable', TreeTable);
+app.component('TreeSelect', TreeSelect);
 app.component('TriStateCheckbox', TriStateCheckbox);
 
 app.mount('#app');
