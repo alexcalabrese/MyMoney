@@ -34,7 +34,8 @@
 
 require('./bootstrap');
 
-import 'primevue/resources/themes/bootstrap4-dark-purple/theme.css';       //theme
+// import 'primevue/resources/themes/bootstrap4-dark-purple/theme.css';       //theme
+import './public/themes/arya-purple/theme.css';       //theme
 import 'primevue/resources/primevue.min.css';                 //core css
 import 'primeicons/primeicons.css';                           //icons
 
