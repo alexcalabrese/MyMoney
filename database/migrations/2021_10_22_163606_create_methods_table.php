@@ -16,6 +16,7 @@ class CreateMethodsTable extends Migration
         Schema::create('methods', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('icon');
             $table->timestamps();
         });
     }
