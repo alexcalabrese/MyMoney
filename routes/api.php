@@ -34,6 +34,7 @@ Route::prefix('transactions')->group(function () {
     Route::get('totalCosts', [TransactionController::class, 'totalCosts']);
     Route::get('totalEarnings', [TransactionController::class, 'totalEarnings']);
     Route::get('totalBalance', [TransactionController::class, 'totalBalance']);
+    Route::get('months', [TransactionController::class, 'getMonthTransactions']);
 });
 
 Route::prefix('categories')->group(function () {

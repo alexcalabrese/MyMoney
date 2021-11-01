@@ -15,7 +15,14 @@ export default class TransactionService {
     }
 
     getTransactions() {
-		return axios.get('/api/transactions').then(res => res.data.data);
-    }
-    
+        return axios.get('/api/transactions').then(res => res.data.data);
+    }    
+
+    getMonthTransactions(currentMonth) {
+        return axios.get('/api/transactions/months', {
+            params: {
+                date: currentMonth
+            }
+        }).then(res => res.data.data);
+    }    
 }

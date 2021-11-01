@@ -131,4 +131,24 @@ class TransactionController extends Controller
 
         return $earnings - $costs;
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getMonthTransactions(Request $request)
+    {
+        // return $request;
+        $date = explode('/', $request->date);
+        $month = $date[0];
+        $year = $date[1];
+
+        return TransactionResource::collection(
+            Transaction::whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->get()
+        );
+    }
 }
