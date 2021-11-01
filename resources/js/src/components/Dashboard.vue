@@ -89,6 +89,7 @@
           :yearNavigator="true"
           yearRange="2000:2030"
           showIcon
+          @date-select="refreshTransactions(currentMonth)"
         />
       </div>
     </div>
@@ -702,7 +703,7 @@ export default {
 
   data() {
     return {
-      currentMonth: null,
+      currentMonth: this.getCurrentMonth(),
       services: {
         transactionService: null,
         categoryService: null,
@@ -798,9 +799,8 @@ export default {
   },
 
   mounted() {
-    this.services.transactionService
-      .getTransactions()
-      .then((data) => (this.lists.transactions = data));
+    this.refreshTransactions(this.currentMonth);
+
     this.services.transactionService
       .getTotalEarnings()
       .then((data) => (this.stats.totalEarnings = data));
@@ -829,6 +829,15 @@ export default {
   },
 
   methods: {
+    refreshTransactions(currentMonth) {
+      let fullDate =
+        [currentMonth.getMonth() + 1] + "/" + currentMonth.getFullYear();
+
+      this.services.transactionService
+        .getMonthTransactions(fullDate)
+        .then((data) => (this.lists.transactions = data));
+    },
+
     formatCurrency(value, type) {
       return (
         type +
@@ -838,7 +847,8 @@ export default {
 
     getCurrentMonth() {
       const today = new Date();
-      return today.getMonth() + "/" + today.getFullYear();
+
+      return today;
     },
 
     open() {
@@ -868,8 +878,8 @@ export default {
         })
         .then((response) => {
           this.resetForm();
+          this.refreshTransactions();
           this.display = false;
-          console.log(response);
         });
     },
 
