@@ -2,16 +2,28 @@ import axios from 'axios';
 
 export default class TransactionService {
 
-    getTotalCosts(){
-        return axios.get('/api/transactions/totalCosts').then(res => res.data);
+    getTotalCosts(currentMonth){
+        return axios.get('/api/transactions/totalCosts', {
+            params: {
+                date: currentMonth
+            }
+        }).then(res => res.data);
     }
     
-    getTotalEarnings(){
-        return axios.get('/api/transactions/totalEarnings').then(res => res.data);
+    getTotalEarnings(currentMonth){
+        return axios.get('/api/transactions/totalEarnings', {
+            params: {
+                date: currentMonth
+            }
+        }).then(res => res.data);
     }
 
-    getTotalBalance(){
-        return axios.get('/api/transactions/totalBalance').then(res => res.data);
+    getTotalBalance(currentMonth){
+        return axios.get('/api/transactions/totalBalance', {
+            params: {
+                date: currentMonth
+            }
+        }).then(res => res.data);
     }
 
     getTransactions() {

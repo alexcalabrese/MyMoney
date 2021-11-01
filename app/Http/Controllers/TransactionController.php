@@ -96,51 +96,40 @@ class TransactionController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function totalCosts()
+    public function totalCosts(Request $request)
     {
-        return Transaction::where('type', '-')->sum('total');
+        $date = explode('/', $request->date);
+        $month = $date[0];
+        $year = $date[1];
+
+        return Transaction::where('type', '-')
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->sum('total');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function totalEarnings()
+    public function totalEarnings(Request $request)
     {
-        return Transaction::where('type', '+')->sum('total');
+        $date = explode('/', $request->date);
+        $month = $date[0];
+        $year = $date[1];
+
+        return Transaction::where('type', '+')
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->sum('total');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function totalBalance()
+    public function totalBalance(Request $request)
     {
-        $costs = $this->totalCosts();
-        $earnings = $this->totalEarnings();
+        $costs = $this->totalCosts($request);
+        $earnings = $this->totalEarnings($request);
 
         return $earnings - $costs;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function getMonthTransactions(Request $request)
     {
-        // return $request;
         $date = explode('/', $request->date);
         $month = $date[0];
         $year = $date[1];

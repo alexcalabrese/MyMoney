@@ -89,7 +89,10 @@
           :yearNavigator="true"
           yearRange="2000:2030"
           showIcon
-          @date-select="refreshTransactions(currentMonth)"
+          @date-select="
+            refreshTransactions(currentMonth);
+            refreshStats(currentMonth);
+          "
         />
       </div>
     </div>
@@ -800,16 +803,7 @@ export default {
 
   mounted() {
     this.refreshTransactions(this.currentMonth);
-
-    this.services.transactionService
-      .getTotalEarnings()
-      .then((data) => (this.stats.totalEarnings = data));
-    this.services.transactionService
-      .getTotalCosts()
-      .then((data) => (this.stats.totalCosts = data));
-    this.services.transactionService
-      .getTotalBalance()
-      .then((data) => (this.stats.totalBalance = data));
+    this.refreshStats(this.currentMonth);
 
     this.services.categoryService
       .getTree()
@@ -830,12 +824,26 @@ export default {
 
   methods: {
     refreshTransactions(currentMonth) {
-      let fullDate =
-        [currentMonth.getMonth() + 1] + "/" + currentMonth.getFullYear();
-
+      let fullDate = this.formatDate(currentMonth);
       this.services.transactionService
         .getMonthTransactions(fullDate)
         .then((data) => (this.lists.transactions = data));
+    },
+
+    refreshStats(currentMonth) {
+      this.services.transactionService
+        .getTotalEarnings(this.formatDate(currentMonth))
+        .then((data) => (this.stats.totalEarnings = data));
+      this.services.transactionService
+        .getTotalCosts(this.formatDate(currentMonth))
+        .then((data) => (this.stats.totalCosts = data));
+      this.services.transactionService
+        .getTotalBalance(this.formatDate(currentMonth))
+        .then((data) => (this.stats.totalBalance = data));
+    },
+
+    formatDate(date) {
+      return [date.getMonth() + 1] + "/" + date.getFullYear();
     },
 
     formatCurrency(value, type) {
