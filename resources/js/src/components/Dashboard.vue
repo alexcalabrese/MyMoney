@@ -91,6 +91,7 @@
           showIcon
           @date-select="
             refreshTransactions(currentMonth);
+            refreshCharts(currentMonth);
             refreshStats(currentMonth);
           "
         />
@@ -108,7 +109,7 @@
         <Chart type="line" :data="lineData" />
       </div>
     </div> -->
-    <div class="col-12 xl:col-12">
+    <div class="col-7 xl:col-7">
       <div class="card">
         <h5>
           Latest Transactions
@@ -122,7 +123,7 @@
         </h5>
         <Dialog
           header="Add Transaction"
-          v-model:visible="display"
+          v-model:visible="display.addTransaction"
           :breakpoints="{ '960px': '75vw' }"
           :style="{ width: '45vw' }"
           :modal="true"
@@ -203,24 +204,26 @@
                 <div class="mt-3 p-col">
                   <label for="category">Category</label>
                   <TreeSelect
-                    v-model="v$.treeSelects.selectedCategory.$model"
+                    v-model="v$.dialog.treeSelects.selectedCategory.$model"
                     :options="lists.categories"
                     scrollHeight="200px"
                     placeholder="Select"
                     selectionMode="single"
                     :class="{
                       'p-invalid':
-                        v$.treeSelects.selectedCategory.$invalid && submitted,
+                        v$.dialog.treeSelects.selectedCategory.$invalid &&
+                        submitted,
                     }"
                   />
                   <small
                     v-if="
-                      (v$.treeSelects.selectedCategory.$invalid && submitted) ||
-                      v$.treeSelects.selectedCategory.$pending.$response
+                      (v$.dialog.treeSelects.selectedCategory.$invalid &&
+                        submitted) ||
+                      v$.dialog.treeSelects.selectedCategory.$pending.$response
                     "
                     class="p-error"
                     >{{
-                      v$.treeSelects.selectedCategory.required.$message.replace(
+                      v$.dialog.treeSelects.selectedCategory.required.$message.replace(
                         "Value",
                         "Category"
                       )
@@ -232,24 +235,26 @@
                 <div class="mt-3 p-col">
                   <label for="state">State</label>
                   <TreeSelect
-                    v-model="v$.treeSelects.selectedState.$model"
+                    v-model="v$.dialog.treeSelects.selectedState.$model"
                     :options="lists.states"
                     scrollHeight="200px"
                     placeholder="Select"
                     selectionMode="single"
                     :class="{
                       'p-invalid':
-                        v$.treeSelects.selectedState.$invalid && submitted,
+                        v$.dialog.treeSelects.selectedState.$invalid &&
+                        submitted,
                     }"
                   />
                   <small
                     v-if="
-                      (v$.treeSelects.selectedState.$invalid && submitted) ||
-                      v$.treeSelects.selectedState.$pending.$response
+                      (v$.dialog.treeSelects.selectedState.$invalid &&
+                        submitted) ||
+                      v$.dialog.treeSelects.selectedState.$pending.$response
                     "
                     class="p-error"
                     >{{
-                      v$.treeSelects.selectedState.required.$message.replace(
+                      v$.dialog.treeSelects.selectedState.required.$message.replace(
                         "Value",
                         "State"
                       )
@@ -261,23 +266,25 @@
                 <div class="mt-3 p-col">
                   <label for="state">Timing</label>
                   <TreeSelect
-                    v-model="v$.treeSelects.selectedTiming.$model"
+                    v-model="v$.dialog.treeSelects.selectedTiming.$model"
                     :options="lists.timings"
                     scrollHeight="200px"
                     placeholder="Select"
                     selectionMode="single"
                     :class="{
                       'p-invalid':
-                        v$.treeSelects.selectedTiming.$invalid && submitted,
+                        v$.dialog.treeSelects.selectedTiming.$invalid &&
+                        submitted,
                     }"
                   /><small
                     v-if="
-                      (v$.treeSelects.selectedTiming.$invalid && submitted) ||
-                      v$.treeSelects.selectedTiming.$pending.$response
+                      (v$.dialog.treeSelects.selectedTiming.$invalid &&
+                        submitted) ||
+                      v$.dialog.treeSelects.selectedTiming.$pending.$response
                     "
                     class="p-error"
                     >{{
-                      v$.treeSelects.selectedTiming.required.$message.replace(
+                      v$.dialog.treeSelects.selectedTiming.required.$message.replace(
                         "Value",
                         "Timing"
                       )
@@ -289,23 +296,25 @@
                 <div class="mt-3 p-col">
                   <label for="state">Method</label>
                   <TreeSelect
-                    v-model="v$.treeSelects.selectedMethod.$model"
+                    v-model="v$.dialog.treeSelects.selectedMethod.$model"
                     :options="lists.methods"
                     scrollHeight="200px"
                     placeholder="Select"
                     selectionMode="single"
                     :class="{
                       'p-invalid':
-                        v$.treeSelects.selectedMethod.$invalid && submitted,
+                        v$.dialog.treeSelects.selectedMethod.$invalid &&
+                        submitted,
                     }"
                   /><small
                     v-if="
-                      (v$.treeSelects.selectedMethod.$invalid && submitted) ||
-                      v$.treeSelects.selectedMethod.$pending.$response
+                      (v$.dialog.treeSelects.selectedMethod.$invalid &&
+                        submitted) ||
+                      v$.dialog.treeSelects.selectedMethod.$pending.$response
                     "
                     class="p-error"
                     >{{
-                      v$.treeSelects.selectedMethod.required.$message.replace(
+                      v$.dialog.treeSelects.selectedMethod.required.$message.replace(
                         "Value",
                         "Method"
                       )
@@ -334,47 +343,291 @@
           </div>
         </Dialog>
         <DataTable :value="lists.transactions" :rows="5">
-          <Column
-            field="readableTotal"
-            header="Total"
-            :sortable="true"
-            style="width: 35%"
-          >
+          <Column field="category_icon" :sortable="true" style="width: 12%">
             <template #body="slotProps">
-              {{ formatCurrency(slotProps.data.total, slotProps.data.type) }}
+              <Avatar
+                :icon="slotProps.data.category_icon"
+                shape="circle"
+                class="text-xl bg-blue-600"
+                size="large"
+              />
             </template>
           </Column>
           <Column
-            field="category"
+            field="category_label"
             header="Category"
             :sortable="true"
-            style="width: 35%"
+            style="width: 25%"
           ></Column>
           <Column
             field="date"
             header="Date"
             :sortable="true"
-            style="width: 35%"
+            style="width: 25%"
           ></Column>
           <Column
             field="notes"
             header="Notes"
             :sortable="true"
-            style="width: 35%"
+            style="width: 25%"
           ></Column>
-          <Column style="width: 15%">
+          <Column
+            field="readableTotal"
+            header="Total"
+            :sortable="true"
+            style="width: 25%"
+          >
+            <template #body="slotProps">
+              <p
+                :class="[
+                  slotProps.data.type == '-'
+                    ? 'font-bold text-pink-600'
+                    : 'font-bold text-green-600',
+                ]"
+              >
+                {{ formatCurrency(slotProps.data.total, slotProps.data.type) }}
+              </p>
+            </template>
+          </Column>
+          <!-- <Column style="width: 15%">
             <template #header> View </template>
-            <template #body>
+            <template #body="slotProps">
               <Button
                 icon="pi pi-search"
                 type="button"
                 class="p-button-text"
+                @click="loadTransaction(slotProps.data.id)"
               ></Button>
             </template>
-          </Column>
+          </Column> -->
         </DataTable>
+        <!-- <Dialog
+          header="Add Transaction"
+          v-model:visible="display.seeTransaction"
+          :breakpoints="{ '960px': '75vw' }"
+          :style="{ width: '45vw' }"
+          :modal="true"
+          dismissableMask="true"
+        >
+          <SelectButton
+            v-model="transaction.selectedType"
+            :options="transaction.types"
+            optionLabel="name"
+            class="m-1 text-center"
+            optionValue="name"
+          />
+
+          <form
+            @submit.prevent="handleSubmit(!v$.$invalid)"
+            class="p-fluid p-grid"
+          >
+            <div class="p-col-12">
+              <label for="total">Total</label>
+              <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">
+                  <i
+                    :class="[
+                      transaction.selectedType == 'Cost'
+                        ? 'p-button-success pi pi-minus'
+                        : 'p-button-danger pi pi-plus',
+                    ]"
+                  ></i>
+                </span>
+                <InputNumber
+                  id="total"
+                  v-model="v$.transaction.total.$model"
+                  mode="currency"
+                  currency="EUR"
+                  locale="it-IT"
+                />
+              </div>
+            </div>
+            <div class="mt-3 p-col">
+              <label for="category">Notes</label>
+              <Textarea
+                v-model="transaction.notes"
+                placeholder="Your Notes"
+                :autoResize="true"
+                rows="3"
+                cols="30"
+                required
+              />
+            </div>
+            <div class="mt-3 p-col">
+              <label for="category">Date</label>
+              <div class="p-inputgroup">
+                <Calendar
+                  v-model="v$.transaction.date.$model"
+                  dateFormat="mm-dd-yy"
+                  :class="{
+                    'p-invalid': v$.transaction.date.$invalid && submitted,
+                  }"
+                />
+                <Button
+                  icon="pi pi-times"
+                  @click="v$.transaction.date.$model = ''"
+                />
+              </div>
+              <small
+                v-if="
+                  (v$.transaction.date.$invalid && submitted) ||
+                  v$.transaction.date.$pending.$response
+                "
+                class="p-error"
+                >{{
+                  v$.transaction.date.required.$message.replace("Value", "Date")
+                }}</small
+              >
+            </div>
+            <div class="grid">
+              <div class="col-6">
+                <div class="mt-3 p-col">
+                  <label for="category">Category</label>
+                  <TreeSelect
+                    v-model="v$.transaction.treeSelects.selectedCategory.$model"
+                    :options="lists.categories"
+                    scrollHeight="200px"
+                    placeholder="Select"
+                    selectionMode="single"
+                    :class="{
+                      'p-invalid':
+                        v$.transaction.treeSelects.selectedCategory.$invalid &&
+                        submitted,
+                    }"
+                  />
+                  <small
+                    v-if="
+                      (v$.transaction.treeSelects.selectedCategory.$invalid &&
+                        submitted) ||
+                      v$.transaction.treeSelects.selectedCategory.$pending
+                        .$response
+                    "
+                    class="p-error"
+                    >{{
+                      v$.transaction.treeSelects.selectedCategory.required.$message.replace(
+                        "Value",
+                        "Category"
+                      )
+                    }}</small
+                  >
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mt-3 p-col">
+                  <label for="state">State</label>
+                  <TreeSelect
+                    v-model="v$.transaction.treeSelects.selectedState.$model"
+                    :options="lists.states"
+                    scrollHeight="200px"
+                    placeholder="Select"
+                    selectionMode="single"
+                    :class="{
+                      'p-invalid':
+                        v$.transaction.treeSelects.selectedState.$invalid &&
+                        submitted,
+                    }"
+                  />
+                  <small
+                    v-if="
+                      (v$.transaction.treeSelects.selectedState.$invalid &&
+                        submitted) ||
+                      v$.transaction.treeSelects.selectedState.$pending
+                        .$response
+                    "
+                    class="p-error"
+                    >{{
+                      v$.transaction.treeSelects.selectedState.required.$message.replace(
+                        "Value",
+                        "State"
+                      )
+                    }}</small
+                  >
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mt-3 p-col">
+                  <label for="state">Timing</label>
+                  <TreeSelect
+                    v-model="v$.transaction.treeSelects.selectedTiming.$model"
+                    :options="lists.timings"
+                    scrollHeight="200px"
+                    placeholder="Select"
+                    selectionMode="single"
+                    :class="{
+                      'p-invalid':
+                        v$.transaction.treeSelects.selectedTiming.$invalid &&
+                        submitted,
+                    }"
+                  /><small
+                    v-if="
+                      (v$.transaction.treeSelects.selectedTiming.$invalid &&
+                        submitted) ||
+                      v$.transaction.treeSelects.selectedTiming.$pending
+                        .$response
+                    "
+                    class="p-error"
+                    >{{
+                      v$.transaction.treeSelects.selectedTiming.required.$message.replace(
+                        "Value",
+                        "Timing"
+                      )
+                    }}</small
+                  >
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mt-3 p-col">
+                  <label for="state">Method</label>
+                  <TreeSelect
+                    v-model="v$.transaction.treeSelects.selectedMethod.$model"
+                    :options="lists.methods"
+                    scrollHeight="200px"
+                    placeholder="Select"
+                    selectionMode="single"
+                    :class="{
+                      'p-invalid':
+                        v$.transaction.treeSelects.selectedMethod.$invalid &&
+                        submitted,
+                    }"
+                  /><small
+                    v-if="
+                      (v$.transaction.treeSelects.selectedMethod.$invalid &&
+                        submitted) ||
+                      v$.transaction.treeSelects.selectedMethod.$pending
+                        .$response
+                    "
+                    class="p-error"
+                    >{{
+                      v$.transaction.treeSelects.selectedMethod.required.$message.replace(
+                        "Value",
+                        "Method"
+                      )
+                    }}</small
+                  >
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="grid">
+            <div class="col-12 text-center">
+              <Button
+                label="Add Transaction"
+                class="
+                  mt-2
+                  p-button-success p-button-rounded
+                  text-white-alpha-90
+                  font-medium
+                "
+                icon="pi pi-check"
+                type="Submit"
+                @click="handleSubmit(!v$.$invalid)"
+              />
+            </div>
+          </div>
+        </Dialog> -->
       </div>
-      <div class="card">
+      <!-- <div class="card">
         <div class="flex justify-content-between align-items-center mb-5">
           <h5>Best Selling Products</h5>
           <div>
@@ -562,9 +815,15 @@
             </div>
           </li>
         </ul>
+      </div> -->
+    </div>
+    <div class="col-5 xl:col-5">
+      <div class="card">
+        <h5>Sales Overview</h5>
+        <Chart ref="costsChart" type="doughnut" :data="lineDataTest" />
       </div>
     </div>
-    <div class="col-12 xl:col-6">
+    <!-- <div class="col-12 xl:col-6">
       <div class="card">
         <div class="flex align-items-center justify-content-between mb-4">
           <h5>Notifications</h5>
@@ -685,7 +944,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -706,7 +965,7 @@ export default {
 
   data() {
     return {
-      currentMonth: this.getCurrentMonth(),
+      currentMonth: null,
       services: {
         transactionService: null,
         categoryService: null,
@@ -721,7 +980,10 @@ export default {
         timings: null,
         methods: null,
       },
-      display: false,
+      display: {
+        addTransaction: false,
+        seeTransaction: false,
+      },
       stats: {
         totalCosts: null,
         totalEarnings: null,
@@ -731,13 +993,27 @@ export default {
         types: [{ name: "Cost" }, { name: "Earning" }, { name: "Transfer" }],
         selectedType: "Cost",
         total: 0.0,
+        notes: null,
         date: null,
+        treeSelects: {
+          selectedCategory: null,
+          selectedState: null,
+          selectedTiming: null,
+          selectedMethod: null,
+        },
       },
-      treeSelects: {
-        selectedCategory: null,
-        selectedState: null,
-        selectedTiming: null,
-        selectedMethod: null,
+      transaction: {
+        types: [{ name: "Cost" }, { name: "Earning" }, { name: "Transfer" }],
+        selectedType: "Cost",
+        total: 0.0,
+        notes: null,
+        date: null,
+        treeSelects: {
+          selectedCategory: null,
+          selectedState: null,
+          selectedTiming: null,
+          selectedMethod: null,
+        },
       },
       lineData: {
         labels: [
@@ -768,6 +1044,42 @@ export default {
           },
         ],
       },
+      lineDataTest: {
+        labels: [],
+        // labels: ["Cibo e Bevande", "Shopping", "Transporti"],
+        datasets: [
+          {
+            data: [],
+            // data: [300, 50, 100],
+            backgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56",
+              "#2DA635",
+              "#65009F",
+              "#654AFE",
+              "#1F4FE6",
+              "#D3ED7E",
+              "#FF710D",
+              "#81617E",
+              "#208E68",
+            ],
+            hoverBackgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56",
+              "#2DA635",
+              "#65009F",
+              "#654AFE",
+              "#1F4FE6",
+              "#D3ED7E",
+              "#FF710D",
+              "#81617E",
+              "#208E68",
+            ],
+          },
+        ],
+      },
       items: [
         { label: "Add New", icon: "pi pi-fw pi-plus" },
         { label: "Remove", icon: "pi pi-fw pi-minus" },
@@ -781,12 +1093,22 @@ export default {
       dialog: {
         total: { numeric },
         date: { required },
+        treeSelects: {
+          selectedCategory: { required },
+          selectedState: { required },
+          selectedTiming: { required },
+          selectedMethod: { required },
+        },
       },
-      treeSelects: {
-        selectedCategory: { required },
-        selectedState: { required },
-        selectedTiming: { required },
-        selectedMethod: { required },
+      transaction: {
+        total: { numeric },
+        date: { required },
+        treeSelects: {
+          selectedCategory: { required },
+          selectedState: { required },
+          selectedTiming: { required },
+          selectedMethod: { required },
+        },
       },
     };
   },
@@ -803,7 +1125,12 @@ export default {
 
   mounted() {
     this.refreshTransactions(this.currentMonth);
+    this.refreshCharts(this.currentMonth);
     this.refreshStats(this.currentMonth);
+
+    this.services.categoryService
+      .getCategoriesLabels()
+      .then((data) => (this.lineDataTest.labels = data.map((a) => a.name)));
 
     this.services.categoryService
       .getTree()
@@ -823,11 +1150,51 @@ export default {
   },
 
   methods: {
+    loadTransaction(transactionId) {
+      this.display.seeTransaction = true;
+
+      this.services.transactionService.getTransaction(transactionId).then(
+        (data) => (
+          (this.transaction.total = data.total),
+          (this.transaction.notes = data.notes),
+          (this.transaction.date = data.date),
+          data.type == "-"
+            ? (this.transaction.selectedType = "Cost")
+            : (this.transaction.selectedType = "Earning"),
+          (this.transaction.treeSelects.selectedCategory = {
+            [data.category_id]: true,
+          }),
+          (this.transaction.treeSelects.selectedState = {
+            [data.state_id]: true,
+          }),
+          (this.transaction.treeSelects.selectedTiming = {
+            [data.timing_id]: true,
+          }),
+          (this.transaction.treeSelects.selectedMethod = {
+            [data.method_id]: true,
+          })
+        )
+      );
+    },
+
     refreshTransactions(currentMonth) {
       let fullDate = this.formatDate(currentMonth);
       this.services.transactionService
         .getMonthTransactions(fullDate)
         .then((data) => (this.lists.transactions = data));
+    },
+
+    refreshCharts(currentMonth) {
+      let fullDate = this.formatDate(currentMonth);
+
+      this.services.transactionService
+        .getMonthStats(fullDate)
+        .then(
+          (data) => (
+            (this.lineDataTest.datasets[0].data = data),
+            this.$refs.costsChart.refresh()
+          )
+        );
     },
 
     refreshStats(currentMonth) {
@@ -860,7 +1227,7 @@ export default {
     },
 
     open() {
-      this.display = true;
+      this.display.addTransaction = true;
     },
 
     handleSubmit(isFormValid) {
@@ -876,18 +1243,19 @@ export default {
           date: this.dialog.date.toString().slice(0, 10),
           notes: this.dialog.notes,
           type: this.dialog.selectedType == "Cost" ? "-" : "+",
-          category_id: Object.keys(this.treeSelects.selectedCategory)[0],
-          state_id: Object.keys(this.treeSelects.selectedState)[0],
-          timing_id: Object.keys(this.treeSelects.selectedTiming)[0],
-          method_id: Object.keys(this.treeSelects.selectedMethod)[0],
+          category_id: Object.keys(this.dialog.treeSelects.selectedCategory)[0],
+          state_id: Object.keys(this.dialog.treeSelects.selectedState)[0],
+          timing_id: Object.keys(this.dialog.treeSelects.selectedTiming)[0],
+          method_id: Object.keys(this.dialog.treeSelects.selectedMethod)[0],
         })
         .catch(function (error) {
           console.log(error.response);
         })
         .then((response) => {
           this.resetForm();
-          this.refreshTransactions();
-          this.display = false;
+          this.refreshTransactions(this.currentMonth);
+          this.refreshStats(this.currentMonth);
+          this.display.addTransaction = false;
         });
     },
 
@@ -896,10 +1264,10 @@ export default {
       this.dialog.date = "";
       this.dialog.notes = "";
       this.dialog.selectedType = "";
-      this.treeSelects.selectedCategory = "";
-      this.treeSelects.selectedState = "";
-      this.treeSelects.selectedTiming = "";
-      this.treeSelects.selectedMethod = "";
+      this.dialog.treeSelects.selectedCategory = "";
+      this.dialog.treeSelects.selectedState = "";
+      this.dialog.treeSelects.selectedTiming = "";
+      this.dialog.treeSelects.selectedMethod = "";
 
       this.submitted = false;
     },
