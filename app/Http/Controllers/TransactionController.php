@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\Category;
 use App\Http\Resources\TransactionResource;
 use Illuminate\Http\Request;
 
@@ -70,7 +71,9 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        //
+        $transaction = Transaction::findOrFail($id);
+
+        return new TransactionResource($transaction);
     }
 
     /**
@@ -137,7 +140,32 @@ class TransactionController extends Controller
         return TransactionResource::collection(
             Transaction::whereMonth('date', $month)
                 ->whereYear('date', $year)
+                ->orderBy('date', 'desc')
+                ->take(3)
                 ->get()
         );
+    }
+
+    public function getMonthStats(Request $request)
+    {
+        $date = explode('/', $request->date);
+        $month = $date[0];
+        $year = $date[1];
+
+        $categories = Category::pluck('id');
+        $totals = [];
+
+        foreach ($categories as $category_id) {
+            array_push(
+                $totals,
+                Transaction::where('type', '-')
+                    ->whereMonth('date', $month)
+                    ->whereYear('date', $year)
+                    ->where('category_id', $category_id)
+                    ->sum('total')
+            );
+        }
+
+        return $totals;
     }
 }
