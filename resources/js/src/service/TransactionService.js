@@ -28,13 +28,25 @@ export default class TransactionService {
 
     getTransactions() {
         return axios.get('/api/transactions').then(res => res.data.data);
-    }    
+    }
+    
+    getTransaction(transactionId) {
+        return axios.get(`/api/transactions/${transactionId}`).then(res => res.data.data);
+    }
 
     getMonthTransactions(currentMonth) {
-        return axios.get('/api/transactions/months', {
+        return axios.get('/api/transactions/getMonthTransactions', {
             params: {
                 date: currentMonth
             }
         }).then(res => res.data.data);
-    }    
+    }
+
+    getMonthStats(currentMonth) {
+        return axios.get('/api/transactions/getMonthStats', {
+            params: {
+                date: currentMonth
+            }
+        }).then(res => res.data);
+    }
 }
