@@ -109,7 +109,7 @@
         <Chart type="line" :data="lineData" />
       </div>
     </div> -->
-    <div class="col-7 xl:col-7">
+    <div class="col-12 lg:col-6 xl:col-8">
       <div class="card">
         <h5>
           Latest Transactions
@@ -817,7 +817,7 @@
         </ul>
       </div> -->
     </div>
-    <div class="col-5 xl:col-5">
+    <div class="col-12 lg:col-6 xl:col-4">
       <div class="card">
         <h5>Sales Overview</h5>
         <Chart ref="costsChart" type="doughnut" :data="lineDataTest" />
