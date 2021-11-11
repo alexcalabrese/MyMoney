@@ -5,9 +5,9 @@
         <div class="flex justify-content-between mb-3">
           <div>
             <span class="block text-500 font-medium mb-3">Costs</span>
-            <div class="text-900 font-medium text-xl">
-              -{{ stats.totalCosts }} €
-            </div>
+            <Chip class="bg-pink-800 text-700 font-bold text-xl p-1">
+              - {{ stats.totalCosts }} €
+            </Chip>
           </div>
           <div
             class="
@@ -31,9 +31,9 @@
         <div class="flex justify-content-between mb-3">
           <div>
             <span class="block text-500 font-medium mb-3">Earnings</span>
-            <div class="text-900 font-medium text-xl">
+            <Chip class="bg-green-800 text-700 font-bold text-xl p-1">
               +{{ stats.totalEarnings }} €
-            </div>
+            </Chip>
           </div>
           <div
             class="
@@ -118,7 +118,7 @@
             icon="pi pi-plus-circle"
             iconPos="right"
             class="mr-2 mb-2 float-right"
-            @click="open"
+            @click="display.addTransaction = true"
           ></Button>
         </h5>
         <Dialog
@@ -138,7 +138,7 @@
           />
 
           <form
-            @submit.prevent="handleSubmit(!v$.$invalid)"
+            @submit.prevent="sendNewTransaction(!v$.$invalid)"
             class="p-fluid p-grid"
           >
             <div class="p-col-12">
@@ -337,7 +337,7 @@
                 "
                 icon="pi pi-check"
                 type="Submit"
-                @click="handleSubmit(!v$.$invalid)"
+                @click="sendNewTransaction(!v$.$invalid)"
               />
             </div>
           </div>
@@ -418,7 +418,7 @@
           />
 
           <form
-            @submit.prevent="handleSubmit(!v$.$invalid)"
+            @submit.prevent="sendNewTransaction(!v$.$invalid)"
             class="p-fluid p-grid"
           >
             <div class="p-col-12">
@@ -621,7 +621,7 @@
                 "
                 icon="pi pi-check"
                 type="Submit"
-                @click="handleSubmit(!v$.$invalid)"
+                @click="sendNewTransaction(!v$.$invalid)"
               />
             </div>
           </div>
@@ -819,7 +819,7 @@
     </div>
     <div class="col-12 lg:col-6 xl:col-4">
       <div class="card">
-        <h5>Sales Overview</h5>
+        <h5>Monthly Cost</h5>
         <Chart ref="costsChart" type="doughnut" :data="lineDataTest" />
       </div>
     </div>
@@ -1098,16 +1098,16 @@ export default {
           selectedMethod: { required },
         },
       },
-      transaction: {
-        total: { numeric },
-        date: { required },
-        treeSelects: {
-          selectedCategory: { required },
-          selectedState: { required },
-          selectedTiming: { required },
-          selectedMethod: { required },
-        },
-      },
+      // transaction: {
+      //   total: { numeric },
+      //   date: { required },
+      //   treeSelects: {
+      //     selectedCategory: { required },
+      //     selectedState: { required },
+      //     selectedTiming: { required },
+      //     selectedMethod: { required },
+      //   },
+      // },
     };
   },
 
@@ -1221,11 +1221,7 @@ export default {
       return today;
     },
 
-    open() {
-      this.display.addTransaction = true;
-    },
-
-    handleSubmit(isFormValid) {
+    sendNewTransaction(isFormValid) {
       this.submitted = true;
 
       if (!isFormValid) {
@@ -1249,6 +1245,7 @@ export default {
         .then((response) => {
           this.resetForm();
           this.refreshTransactions(this.currentMonth);
+          this.refreshCharts(this.currentMonth);
           this.refreshStats(this.currentMonth);
           this.display.addTransaction = false;
         });
@@ -1258,7 +1255,7 @@ export default {
       this.dialog.total = 0.0;
       this.dialog.date = "";
       this.dialog.notes = "";
-      this.dialog.selectedType = "";
+      this.dialog.selectedType = "Cost";
       this.dialog.treeSelects.selectedCategory = "";
       this.dialog.treeSelects.selectedState = "";
       this.dialog.treeSelects.selectedTiming = "";
