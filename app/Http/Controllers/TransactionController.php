@@ -152,20 +152,22 @@ class TransactionController extends Controller
         $month = $date[0];
         $year = $date[1];
 
-        $categories = Category::pluck('name', 'id');
+        $categories = Category::select('name', 'id', 'color')->get()->toArray();
         $totals = collect();
 
-        foreach ($categories as $category_id => $categoriesLabel) {
+        foreach ($categories as $category) {
             $totalCost = Transaction::where('type', '-')
                 ->whereMonth('date', $month)
                 ->whereYear('date', $year)
-                ->where('category_id', $category_id)
+                ->where('category_id', $category['id'])
                 ->sum('total');
 
             if ($totalCost != 0) {
                 $totals->push([
-                    "label" => $categoriesLabel,
-                    "total" => $totalCost
+                    "label" => $category['name'],
+                    "total" => $totalCost,
+                    "backgroundColor" => $category['color'],
+                    "hoverBackgroundColor" => $category['color'],
                 ]);
             }
         }

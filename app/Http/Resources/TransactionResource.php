@@ -28,6 +28,7 @@ class TransactionResource extends JsonResource
             'category_id'       => Category::find($this->category_id)->id,
             'category_label'    => Category::find($this->category_id)->name,
             'category_icon'     => Category::find($this->category_id)->icon,
+            'category_color'     => Category::find($this->category_id)->color,
             'state_id'          => State::find($this->state_id)->id,
             'state_label'       => State::find($this->state_id)->name,
             'timing_id'         => Timing::find($this->timing_id)->id,

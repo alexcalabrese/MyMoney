@@ -347,8 +347,9 @@
             <template #body="slotProps">
               <Avatar
                 :icon="slotProps.data.category_icon"
+                class="text-xl"
+                :style="['background-color:' + slotProps.data.category_color]"
                 shape="circle"
-                class="text-xl bg-blue-600"
                 size="large"
               />
             </template>
@@ -1187,6 +1188,12 @@ export default {
           (data) => (
             (this.lineDataTest.labels = data.map((a) => a.label)),
             (this.lineDataTest.datasets[0].data = data.map((a) => a.total)),
+            (this.lineDataTest.datasets[0].backgroundColor = data.map(
+              (a) => a.backgroundColor
+            )),
+            (this.lineDataTest.datasets[0].hoverBackgroundColor = data.map(
+              (a) => a.hoverBackgroundColor
+            )),
             this.$refs.costsChart.refresh()
           )
         );
