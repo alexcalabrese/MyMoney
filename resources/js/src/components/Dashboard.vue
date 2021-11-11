@@ -1046,11 +1046,9 @@ export default {
       },
       lineDataTest: {
         labels: [],
-        // labels: ["Cibo e Bevande", "Shopping", "Transporti"],
         datasets: [
           {
             data: [],
-            // data: [300, 50, 100],
             backgroundColor: [
               "#FF6384",
               "#36A2EB",
@@ -1129,10 +1127,6 @@ export default {
     this.refreshStats(this.currentMonth);
 
     this.services.categoryService
-      .getCategoriesLabels()
-      .then((data) => (this.lineDataTest.labels = data.map((a) => a.name)));
-
-    this.services.categoryService
       .getTree()
       .then((data) => (this.lists.categories = data));
 
@@ -1191,7 +1185,8 @@ export default {
         .getMonthStats(fullDate)
         .then(
           (data) => (
-            (this.lineDataTest.datasets[0].data = data),
+            (this.lineDataTest.labels = data.map((a) => a.label)),
+            (this.lineDataTest.datasets[0].data = data.map((a) => a.total)),
             this.$refs.costsChart.refresh()
           )
         );
