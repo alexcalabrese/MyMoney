@@ -6,7 +6,7 @@
           <div>
             <span class="block text-500 font-medium mb-3">Costs</span>
             <Chip class="bg-pink-800 text-700 font-bold text-xl p-1">
-              - {{ stats.totalCosts }} €
+              -{{ stats.totalCosts }} €
             </Chip>
           </div>
           <div
@@ -121,6 +121,71 @@
             @click="display.addTransaction = true"
           ></Button>
         </h5>
+        <DataTable :value="lists.transactions">
+          <Column field="category_icon" :sortable="true" style="width: 12%">
+            <template #body="slotProps">
+              <Avatar
+                :icon="slotProps.data.category_icon"
+                class="text-xl"
+                :style="['background-color:' + slotProps.data.category_color]"
+                shape="circle"
+                size="large"
+              />
+            </template>
+          </Column>
+          <Column
+            field="category_label"
+            header="Category"
+            :sortable="true"
+            style="width: 25%"
+          ></Column>
+          <Column
+            field="date"
+            header="Date"
+            :sortable="true"
+            style="width: 25%"
+          ></Column>
+          <Column
+            field="notes"
+            header="Notes"
+            :sortable="true"
+            style="width: 25%"
+          ></Column>
+          <Column
+            field="readableTotal"
+            header="Total"
+            :sortable="true"
+            style="width: 25%"
+          >
+            <template #body="slotProps">
+              <p
+                :class="[
+                  slotProps.data.type == '-'
+                    ? 'font-bold text-pink-600'
+                    : 'font-bold text-green-600',
+                ]"
+              >
+                {{
+                  services.utilityService.formatCurrency(
+                    slotProps.data.total,
+                    slotProps.data.type
+                  )
+                }}
+              </p>
+            </template>
+          </Column>
+          <!-- <Column style="width: 15%">
+            <template #header> View </template>
+            <template #body="slotProps">
+              <Button
+                icon="pi pi-search"
+                type="button"
+                class="p-button-text"
+                @click="loadTransaction(slotProps.data.id)"
+              ></Button>
+            </template>
+          </Column> -->
+        </DataTable>
         <Dialog
           header="Add Transaction"
           v-model:visible="display.addTransaction"
@@ -342,291 +407,6 @@
             </div>
           </div>
         </Dialog>
-        <DataTable :value="lists.transactions" :rows="5">
-          <Column field="category_icon" :sortable="true" style="width: 12%">
-            <template #body="slotProps">
-              <Avatar
-                :icon="slotProps.data.category_icon"
-                class="text-xl"
-                :style="['background-color:' + slotProps.data.category_color]"
-                shape="circle"
-                size="large"
-              />
-            </template>
-          </Column>
-          <Column
-            field="category_label"
-            header="Category"
-            :sortable="true"
-            style="width: 25%"
-          ></Column>
-          <Column
-            field="date"
-            header="Date"
-            :sortable="true"
-            style="width: 25%"
-          ></Column>
-          <Column
-            field="notes"
-            header="Notes"
-            :sortable="true"
-            style="width: 25%"
-          ></Column>
-          <Column
-            field="readableTotal"
-            header="Total"
-            :sortable="true"
-            style="width: 25%"
-          >
-            <template #body="slotProps">
-              <p
-                :class="[
-                  slotProps.data.type == '-'
-                    ? 'font-bold text-pink-600'
-                    : 'font-bold text-green-600',
-                ]"
-              >
-                {{ formatCurrency(slotProps.data.total, slotProps.data.type) }}
-              </p>
-            </template>
-          </Column>
-          <!-- <Column style="width: 15%">
-            <template #header> View </template>
-            <template #body="slotProps">
-              <Button
-                icon="pi pi-search"
-                type="button"
-                class="p-button-text"
-                @click="loadTransaction(slotProps.data.id)"
-              ></Button>
-            </template>
-          </Column> -->
-        </DataTable>
-        <!-- <Dialog
-          header="Add Transaction"
-          v-model:visible="display.seeTransaction"
-          :breakpoints="{ '960px': '75vw' }"
-          :style="{ width: '45vw' }"
-          :modal="true"
-          dismissableMask="true"
-        >
-          <SelectButton
-            v-model="transaction.selectedType"
-            :options="transaction.types"
-            optionLabel="name"
-            class="m-1 text-center"
-            optionValue="name"
-          />
-
-          <form
-            @submit.prevent="sendNewTransaction(!v$.$invalid)"
-            class="p-fluid p-grid"
-          >
-            <div class="p-col-12">
-              <label for="total">Total</label>
-              <div class="p-inputgroup">
-                <span class="p-inputgroup-addon">
-                  <i
-                    :class="[
-                      transaction.selectedType == 'Cost'
-                        ? 'p-button-success pi pi-minus'
-                        : 'p-button-danger pi pi-plus',
-                    ]"
-                  ></i>
-                </span>
-                <InputNumber
-                  id="total"
-                  v-model="v$.transaction.total.$model"
-                  mode="currency"
-                  currency="EUR"
-                  locale="it-IT"
-                />
-              </div>
-            </div>
-            <div class="mt-3 p-col">
-              <label for="category">Notes</label>
-              <Textarea
-                v-model="transaction.notes"
-                placeholder="Your Notes"
-                :autoResize="true"
-                rows="3"
-                cols="30"
-                required
-              />
-            </div>
-            <div class="mt-3 p-col">
-              <label for="category">Date</label>
-              <div class="p-inputgroup">
-                <Calendar
-                  v-model="v$.transaction.date.$model"
-                  dateFormat="mm-dd-yy"
-                  :class="{
-                    'p-invalid': v$.transaction.date.$invalid && submitted,
-                  }"
-                />
-                <Button
-                  icon="pi pi-times"
-                  @click="v$.transaction.date.$model = ''"
-                />
-              </div>
-              <small
-                v-if="
-                  (v$.transaction.date.$invalid && submitted) ||
-                  v$.transaction.date.$pending.$response
-                "
-                class="p-error"
-                >{{
-                  v$.transaction.date.required.$message.replace("Value", "Date")
-                }}</small
-              >
-            </div>
-            <div class="grid">
-              <div class="col-6">
-                <div class="mt-3 p-col">
-                  <label for="category">Category</label>
-                  <TreeSelect
-                    v-model="v$.transaction.treeSelects.selectedCategory.$model"
-                    :options="lists.categories"
-                    scrollHeight="200px"
-                    placeholder="Select"
-                    selectionMode="single"
-                    :class="{
-                      'p-invalid':
-                        v$.transaction.treeSelects.selectedCategory.$invalid &&
-                        submitted,
-                    }"
-                  />
-                  <small
-                    v-if="
-                      (v$.transaction.treeSelects.selectedCategory.$invalid &&
-                        submitted) ||
-                      v$.transaction.treeSelects.selectedCategory.$pending
-                        .$response
-                    "
-                    class="p-error"
-                    >{{
-                      v$.transaction.treeSelects.selectedCategory.required.$message.replace(
-                        "Value",
-                        "Category"
-                      )
-                    }}</small
-                  >
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="mt-3 p-col">
-                  <label for="state">State</label>
-                  <TreeSelect
-                    v-model="v$.transaction.treeSelects.selectedState.$model"
-                    :options="lists.states"
-                    scrollHeight="200px"
-                    placeholder="Select"
-                    selectionMode="single"
-                    :class="{
-                      'p-invalid':
-                        v$.transaction.treeSelects.selectedState.$invalid &&
-                        submitted,
-                    }"
-                  />
-                  <small
-                    v-if="
-                      (v$.transaction.treeSelects.selectedState.$invalid &&
-                        submitted) ||
-                      v$.transaction.treeSelects.selectedState.$pending
-                        .$response
-                    "
-                    class="p-error"
-                    >{{
-                      v$.transaction.treeSelects.selectedState.required.$message.replace(
-                        "Value",
-                        "State"
-                      )
-                    }}</small
-                  >
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="mt-3 p-col">
-                  <label for="state">Timing</label>
-                  <TreeSelect
-                    v-model="v$.transaction.treeSelects.selectedTiming.$model"
-                    :options="lists.timings"
-                    scrollHeight="200px"
-                    placeholder="Select"
-                    selectionMode="single"
-                    :class="{
-                      'p-invalid':
-                        v$.transaction.treeSelects.selectedTiming.$invalid &&
-                        submitted,
-                    }"
-                  /><small
-                    v-if="
-                      (v$.transaction.treeSelects.selectedTiming.$invalid &&
-                        submitted) ||
-                      v$.transaction.treeSelects.selectedTiming.$pending
-                        .$response
-                    "
-                    class="p-error"
-                    >{{
-                      v$.transaction.treeSelects.selectedTiming.required.$message.replace(
-                        "Value",
-                        "Timing"
-                      )
-                    }}</small
-                  >
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="mt-3 p-col">
-                  <label for="state">Method</label>
-                  <TreeSelect
-                    v-model="v$.transaction.treeSelects.selectedMethod.$model"
-                    :options="lists.methods"
-                    scrollHeight="200px"
-                    placeholder="Select"
-                    selectionMode="single"
-                    :class="{
-                      'p-invalid':
-                        v$.transaction.treeSelects.selectedMethod.$invalid &&
-                        submitted,
-                    }"
-                  /><small
-                    v-if="
-                      (v$.transaction.treeSelects.selectedMethod.$invalid &&
-                        submitted) ||
-                      v$.transaction.treeSelects.selectedMethod.$pending
-                        .$response
-                    "
-                    class="p-error"
-                    >{{
-                      v$.transaction.treeSelects.selectedMethod.required.$message.replace(
-                        "Value",
-                        "Method"
-                      )
-                    }}</small
-                  >
-                </div>
-              </div>
-            </div>
-          </form>
-
-          <div class="grid">
-            <div class="col-12 text-center">
-              <Button
-                label="Add Transaction"
-                class="
-                  mt-2
-                  p-button-success p-button-rounded
-                  text-white-alpha-90
-                  font-medium
-                "
-                icon="pi pi-check"
-                type="Submit"
-                @click="sendNewTransaction(!v$.$invalid)"
-              />
-            </div>
-          </div>
-        </Dialog> -->
       </div>
       <!-- <div class="card">
         <div class="flex justify-content-between align-items-center mb-5">
@@ -956,6 +736,8 @@ import StateService from "../service/StateService";
 import TimingService from "../service/TimingService";
 import MethodService from "../service/MethodService";
 
+import UtilityService from "../service/UtilityService";
+
 import useVuelidate from "@vuelidate/core";
 import { required, numeric } from "@vuelidate/validators";
 
@@ -973,6 +755,7 @@ export default {
         stateService: null,
         timingService: null,
         methodService: null,
+        utilityService: null,
       },
       lists: {
         transactions: null,
@@ -1099,16 +882,6 @@ export default {
           selectedMethod: { required },
         },
       },
-      // transaction: {
-      //   total: { numeric },
-      //   date: { required },
-      //   treeSelects: {
-      //     selectedCategory: { required },
-      //     selectedState: { required },
-      //     selectedTiming: { required },
-      //     selectedMethod: { required },
-      //   },
-      // },
     };
   },
 
@@ -1118,6 +891,7 @@ export default {
     this.services.stateService = new StateService();
     this.services.timingService = new TimingService();
     this.services.methodService = new MethodService();
+    this.services.utilityService = new UtilityService();
 
     this.currentMonth = this.getCurrentMonth();
   },
@@ -1145,38 +919,11 @@ export default {
   },
 
   methods: {
-    loadTransaction(transactionId) {
-      this.display.seeTransaction = true;
-
-      this.services.transactionService.getTransaction(transactionId).then(
-        (data) => (
-          (this.transaction.total = data.total),
-          (this.transaction.notes = data.notes),
-          (this.transaction.date = data.date),
-          data.type == "-"
-            ? (this.transaction.selectedType = "Cost")
-            : (this.transaction.selectedType = "Earning"),
-          (this.transaction.treeSelects.selectedCategory = {
-            [data.category_id]: true,
-          }),
-          (this.transaction.treeSelects.selectedState = {
-            [data.state_id]: true,
-          }),
-          (this.transaction.treeSelects.selectedTiming = {
-            [data.timing_id]: true,
-          }),
-          (this.transaction.treeSelects.selectedMethod = {
-            [data.method_id]: true,
-          })
-        )
-      );
-    },
-
     refreshTransactions(currentMonth) {
       let fullDate = this.formatDate(currentMonth);
       this.services.transactionService
         .getMonthTransactions(fullDate)
-        .then((data) => (this.lists.transactions = data));
+        .then((data) => (this.lists.transactions = data.slice(0, 3)));
     },
 
     refreshCharts(currentMonth) {
@@ -1212,14 +959,7 @@ export default {
     },
 
     formatDate(date) {
-      return [date.getMonth() + 1] + "/" + date.getFullYear();
-    },
-
-    formatCurrency(value, type) {
-      return (
-        type +
-        value.toLocaleString("it-IT", { style: "currency", currency: "EUR" })
-      );
+      return [date.getMonth() + 1] + "-" + date.getFullYear();
     },
 
     getCurrentMonth() {

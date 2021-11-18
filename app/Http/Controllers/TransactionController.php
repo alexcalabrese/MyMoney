@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use App\Models\Category;
 use App\Http\Resources\TransactionResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class TransactionController extends Controller
 {
@@ -16,7 +17,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        return TransactionResource::collection(Transaction::all());
+        return TransactionResource::collection(Transaction::latest()->get());
     }
 
     /**
@@ -85,7 +86,43 @@ class TransactionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'total'         => 'required',
+            'date'          => 'required',
+            'type'          => 'required',
+            'category_id'   => 'required',
+            'state_id'      => 'required',
+            'timing_id'     => 'required',
+            'method_id'     => 'required',
+        ]);
+
+        // return $request->date;
+
+        $transaction = Transaction::findOrFail($id);
+
+        $total = $request->total;
+        $notes = $request->notes;
+        $date = $request->date;
+        $type = $request->type;
+        $category_id = $request->category_id;
+        $state_id = $request->state_id;
+        $timing_id = $request->timing_id;
+        $method_id = $request->method_id;
+
+        $transaction->update([
+            'total' => $total,
+            'notes' => $notes,
+            'date' => $request->date,
+            'type' => $type,
+            'category_id' => $category_id,
+            'state_id' => $state_id,
+            'timing_id' => $timing_id,
+            'method_id' => $method_id,
+            'updated_at' => now(),
+        ]);
+
+
+        return response(200);
     }
 
     /**
@@ -101,7 +138,7 @@ class TransactionController extends Controller
 
     public function totalCosts(Request $request)
     {
-        $date = explode('/', $request->date);
+        $date = explode('-', $request->date);
         $month = $date[0];
         $year = $date[1];
 
@@ -113,7 +150,7 @@ class TransactionController extends Controller
 
     public function totalEarnings(Request $request)
     {
-        $date = explode('/', $request->date);
+        $date = explode('-', $request->date);
         $month = $date[0];
         $year = $date[1];
 
@@ -133,7 +170,7 @@ class TransactionController extends Controller
 
     public function getMonthTransactions(Request $request)
     {
-        $date = explode('/', $request->date);
+        $date = explode('-', $request->date);
         $month = $date[0];
         $year = $date[1];
 
@@ -141,14 +178,13 @@ class TransactionController extends Controller
             Transaction::whereMonth('date', $month)
                 ->whereYear('date', $year)
                 ->orderBy('date', 'desc')
-                ->take(3)
                 ->get()
         );
     }
 
     public function getMonthStats(Request $request)
     {
-        $date = explode('/', $request->date);
+        $date = explode('-', $request->date);
         $month = $date[0];
         $year = $date[1];
 
