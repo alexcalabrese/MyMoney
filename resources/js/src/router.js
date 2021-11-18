@@ -1,11 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Dashboard from './components/Dashboard.vue';
+import TableDemo from './components/Transactions.vue';
 
 const routes = [
     {
         path: '/',
         name: 'dashboard',
         component: Dashboard,
+    },
+    {
+        path: '/transactions',
+        name: 'transactions',
+        component: TableDemo,
     },
     {
         path: '/formlayout',
