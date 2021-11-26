@@ -54,6 +54,10 @@ Route::prefix('methods')->group(function () {
     Route::get('tree', [MethodController::class, 'getTree']);
 });
 
+Route::prefix('labels')->group(function () {
+    Route::get('tree', [LabelController::class, 'getTree']);
+});
+
 Route::apiResources([
     'transactions' => TransactionController::class,
     'categories' => CategoryController::class,
