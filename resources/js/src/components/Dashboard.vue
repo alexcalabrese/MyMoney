@@ -631,7 +631,7 @@
       </div> -->
     </div>
     <div class="col-12 lg:col-6 xl:col-4">
-      <div class="card">
+      <div class="card" style="max-width: 55vh">
         <h5>Monthly Cost</h5>
         <Chart ref="costsChart" type="doughnut" :data="lineDataTest" />
       </div>
