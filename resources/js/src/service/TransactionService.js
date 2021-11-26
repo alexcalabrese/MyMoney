@@ -2,15 +2,15 @@ import axios from 'axios';
 
 export default class TransactionService {
 
-    getTotalCosts(currentMonth){
+    getTotalCosts(currentMonth) {
         return axios.get('/api/transactions/totalCosts', {
             params: {
                 date: currentMonth
             }
         }).then(res => res.data);
     }
-    
-    getTotalEarnings(currentMonth){
+
+    getTotalEarnings(currentMonth) {
         return axios.get('/api/transactions/totalEarnings', {
             params: {
                 date: currentMonth
@@ -18,7 +18,7 @@ export default class TransactionService {
         }).then(res => res.data);
     }
 
-    getTotalBalance(currentMonth){
+    getTotalBalance(currentMonth) {
         return axios.get('/api/transactions/totalBalance', {
             params: {
                 date: currentMonth
@@ -29,7 +29,7 @@ export default class TransactionService {
     getTransactions() {
         return axios.get('/api/transactions').then(res => res.data.data);
     }
-    
+
     getTransaction(transactionId) {
         return axios.get(`/api/transactions/${transactionId}`).then(res => res.data.data);
     }

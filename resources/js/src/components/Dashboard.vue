@@ -387,6 +387,38 @@
                   >
                 </div>
               </div>
+              <div class="col-12">
+                <div class="mt-3 p-col">
+                  <label for="state">Labels</label>
+                  <TreeSelect
+                    v-model="v$.dialog.treeSelects.selectedLabels.$model"
+                    :options="lists.labels"
+                    selectionMode="checkbox"
+                    scrollHeight="200px"
+                    placeholder="Select"
+                    display="chip"
+                    :class="{
+                      'p-invalid':
+                        v$.dialog.treeSelects.selectedLabels.$invalid &&
+                        submitted,
+                    }"
+                  />
+                  <small
+                    v-if="
+                      (v$.dialog.treeSelects.selectedLabels.$invalid &&
+                        submitted) ||
+                      v$.dialog.treeSelects.selectedLabels.$pending.$response
+                    "
+                    class="p-error"
+                    >{{
+                      v$.dialog.treeSelects.selectedLabels.required.$message.replace(
+                        "Value",
+                        "Labels"
+                      )
+                    }}</small
+                  >
+                </div>
+              </div>
             </div>
           </form>
 
@@ -735,6 +767,7 @@ import CategoryService from "../service/CategoryService";
 import StateService from "../service/StateService";
 import TimingService from "../service/TimingService";
 import MethodService from "../service/MethodService";
+import LabelService from "../service/LabelService";
 
 import UtilityService from "../service/UtilityService";
 
@@ -755,6 +788,7 @@ export default {
         stateService: null,
         timingService: null,
         methodService: null,
+        labelService: null,
         utilityService: null,
       },
       lists: {
@@ -763,6 +797,7 @@ export default {
         states: null,
         timings: null,
         methods: null,
+        labels: null,
       },
       display: {
         addTransaction: false,
@@ -784,6 +819,7 @@ export default {
           selectedState: null,
           selectedTiming: null,
           selectedMethod: null,
+          selectedLabels: null,
         },
       },
       transaction: {
@@ -880,6 +916,7 @@ export default {
           selectedState: { required },
           selectedTiming: { required },
           selectedMethod: { required },
+          selectedLabels: {},
         },
       },
     };
@@ -891,6 +928,7 @@ export default {
     this.services.stateService = new StateService();
     this.services.timingService = new TimingService();
     this.services.methodService = new MethodService();
+    this.services.labelService = new LabelService();
     this.services.utilityService = new UtilityService();
 
     this.currentMonth = this.getCurrentMonth();
@@ -916,6 +954,10 @@ export default {
     this.services.methodService
       .getTree()
       .then((data) => (this.lists.methods = data));
+
+    this.services.labelService
+      .getTree()
+      .then((data) => (this.lists.labels = data));
   },
 
   methods: {
@@ -985,6 +1027,7 @@ export default {
           state_id: Object.keys(this.dialog.treeSelects.selectedState)[0],
           timing_id: Object.keys(this.dialog.treeSelects.selectedTiming)[0],
           method_id: Object.keys(this.dialog.treeSelects.selectedMethod)[0],
+          labels_id: Object.keys(this.dialog.treeSelects.selectedLabels),
         })
         .catch(function (error) {
           console.log(error.response);

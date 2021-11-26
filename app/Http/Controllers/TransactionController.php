@@ -38,7 +38,6 @@ class TransactionController extends Controller
             'method_id'     => 'required',
         ]);
 
-
         $total = $request->total;
         $notes = $request->notes;
         $date = $request->date;
@@ -47,6 +46,7 @@ class TransactionController extends Controller
         $state_id = $request->state_id;
         $timing_id = $request->timing_id;
         $method_id = $request->method_id;
+        $labels_id = $request->labels_id;
 
         $transaction = Transaction::create([
             'total' => $total,
@@ -60,6 +60,7 @@ class TransactionController extends Controller
             'created_at' => now(),
         ]);
 
+        $transaction->labels()->sync($labels_id);
 
         return response(200);
     }
@@ -108,6 +109,7 @@ class TransactionController extends Controller
         $state_id = $request->state_id;
         $timing_id = $request->timing_id;
         $method_id = $request->method_id;
+        $labels_id = $request->labels_id;
 
         $transaction->update([
             'total' => $total,
@@ -121,6 +123,7 @@ class TransactionController extends Controller
             'updated_at' => now(),
         ]);
 
+        $transaction->labels()->sync($labels_id);
 
         return response(200);
     }

@@ -298,6 +298,20 @@
                   >
                 </div>
               </div>
+              <div class="col-12">
+                <div class="mt-3 p-col">
+                  <label for="state">Labels</label>
+                  <TreeSelect
+                    v-model="transaction.treeSelects.selectedLabels"
+                    :options="lists.labels"
+                    selectionMode="checkbox"
+                    scrollHeight="200px"
+                    placeholder="Select"
+                    display="chip"
+                    emptyMessage="No Labels Selected"
+                  />
+                </div>
+              </div>
             </div>
           </form>
 
@@ -324,13 +338,13 @@
 </template>
 
 <script>
-// import { FilterMatchMode, FilterOperator } from "primevue/api";
 import TransactionService from "../service/TransactionService";
 import UtilityService from "../service/UtilityService";
 import CategoryService from "../service/CategoryService";
 import StateService from "../service/StateService";
 import TimingService from "../service/TimingService";
 import MethodService from "../service/MethodService";
+import LabelService from "../service/LabelService";
 
 import useVuelidate from "@vuelidate/core";
 import { required, numeric } from "@vuelidate/validators";
@@ -347,6 +361,7 @@ export default {
         stateService: null,
         timingService: null,
         methodService: null,
+        labelService: null,
         utilityService: null,
       },
       display: {
@@ -358,6 +373,7 @@ export default {
         states: null,
         timings: null,
         methods: null,
+        labels: null,
       },
       transaction: {
         id: null,
@@ -371,6 +387,7 @@ export default {
           selectedState: null,
           selectedTiming: null,
           selectedMethod: null,
+          selectedLabels: [],
         },
       },
       transactions: null,
@@ -390,6 +407,7 @@ export default {
           selectedState: { required },
           selectedTiming: { required },
           selectedMethod: { required },
+          selectedLabels: {},
         },
       },
     };
@@ -401,6 +419,7 @@ export default {
     this.services.stateService = new StateService();
     this.services.timingService = new TimingService();
     this.services.methodService = new MethodService();
+    this.services.labelService = new LabelService();
 
     this.services.utilityService = new UtilityService();
 
@@ -424,13 +443,17 @@ export default {
     this.services.methodService
       .getTree()
       .then((data) => (this.lists.methods = data));
+
+    this.services.labelService
+      .getTree()
+      .then((data) => (this.lists.labels = data));
   },
   methods: {
     loadTransaction(transactionId) {
-      this.display.seeTransaction = true;
-
       this.services.transactionService.getTransaction(transactionId).then(
         (data) => (
+          // console.table(data),
+          // console.log(data.label_id),
           (this.transaction.id = data.id),
           (this.transaction.total = data.total),
           (this.transaction.notes = data.notes),
@@ -451,9 +474,20 @@ export default {
           }),
           (this.transaction.treeSelects.selectedMethod = {
             [data.method_id]: true,
-          })
+          }),
+          (this.transaction.treeSelects.selectedLabels = { 0: 2 }),
+          data["label_id"] == null
+            ? null
+            : data["label_id"].forEach((element) => {
+                this.transaction.treeSelects.selectedLabels[`${element}`] = {
+                  checked: true,
+                  partialChecked: false,
+                };
+              })
         )
       );
+
+      this.display.seeTransaction = true;
     },
 
     refreshTransactions(currentMonth) {
@@ -469,6 +503,20 @@ export default {
       if (!isFormValid) {
         return;
       }
+
+      //To print the format of the selected labels:
+      console.log(JSON.stringify(this.transaction.treeSelects.selectedLabels));
+
+      // Extracting the obejct indices
+      let selectedLabels = Object.keys(
+        this.transaction.treeSelects.selectedLabels
+      );
+
+      // Removing the first item because it's always '2'
+      selectedLabels.shift();
+
+      // We have the final array with the id of the selected labels
+      // console.log(selectedLabels);
 
       // Initialize the stringe/date as Date
       let localDate = new Date(this.transaction.date);
@@ -489,6 +537,7 @@ export default {
           method_id: Object.keys(
             this.transaction.treeSelects.selectedMethod
           )[0],
+          labels_id: selectedLabels,
         })
         .catch(function (error) {
           console.log(error.response);
