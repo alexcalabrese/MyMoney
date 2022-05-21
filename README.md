@@ -1,6 +1,6 @@
 ## About MyMoney
 
-MyMoney is a Free and Open Source solution to asset management, track spending, to stay in control and achieve your future economics goals.
+MyMoney is a Free and Open Source solution for asset management, tracking spending, to stay in control and achieve your future economic goals. 
 We aspiring to cover all aspect of Asset Management in every field.
 
 ## Built with
