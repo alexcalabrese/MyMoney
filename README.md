@@ -37,14 +37,11 @@ We aspiring to cover all aspect of Asset Management in every field.
 	sail npm install
 	sail npm run dev
 	sail artisan key:generate
-	sail artisan route:clear
-	sail artisan config:clear
-	sail artisan cache:clear
 	```
 	```bash
 	sail artisan migrate
 	sail artisan db:seed
-	artisan storage:link
+	sail artisan storage:link
 	```
 
 ## New Features
