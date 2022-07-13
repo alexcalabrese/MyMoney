@@ -53,4 +53,4 @@ package-lock.json
 composer.lock
 webpack.mix.js
 public/css/app.css
-.gitignore
+public/css/app.css
