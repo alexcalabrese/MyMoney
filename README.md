@@ -1,7 +1,15 @@
+
+
+
 ## About MyMoney
 
 MyMoney is a Free and Open Source solution for asset management, tracking spending, to stay in control and achieve your future economic goals. 
 We aspiring to cover all aspect of Asset Management in every field.
+
+
+<a href="#"><img src="demo/dashboard.png" title="demo" alt="demo"></a>
+<a href="#"><img src="demo/transactions.png" title="demo" alt="demo"></a>
+
 
 ## Built with
 - [Laravel](https://laravel.com).
@@ -11,6 +19,33 @@ We aspiring to cover all aspect of Asset Management in every field.
 - [PrimeVUE](https://www.primefaces.org/primevue/#/).
 - [Chart.js](https://www.chartjs.org/).
 - [Docker](https://www.docker.com/).
+
+ 
+## Getting Started
+- Setting up repository
+	```bash
+	git clone https://github.com/alexcalabrese/MyMoney.git
+	cd MyMoney
+	composer update
+	```
+- Copy .env.example file and rename it to .env
+- Running Server's setup
+	```bash
+	alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
+	sail up
+	sail build --no-cache
+	sail npm install
+	sail npm run dev
+	sail artisan key:generate
+	sail artisan route:clear
+	sail artisan config:clear
+	sail artisan cache:clear
+	```
+	```bash
+	sail artisan migrate
+	sail artisan db:seed
+	artisan storage:link
+	```
 
 ## New Features
 
