@@ -22,11 +22,10 @@
         "jquery": "^3.6",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "node-sass": "^4.12.0",
         "popper.js": "^1.16.1",
         "postcss": "^8.1.14",
         "resolve-url-loader": "^3.1.4",
-        "sass": "^1.43.2",
+        "sass": "^1.52.1",
         "sass-loader": "^8.0.2"
     },
     "dependencies": {
@@ -35,6 +34,7 @@
         "axios": "0.19.0",
         "chart.js": "3.3.2",
         "core-js": "3.6.5",
+        "node-sass": "npm:sass@^1.52.1",
         "primeflex": "^3.1.0",
         "primeicons": "4.1.0",
         "primevue": "3.7.1",
