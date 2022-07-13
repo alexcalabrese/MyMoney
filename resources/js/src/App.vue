@@ -144,7 +144,7 @@ export default {
             }];
         },
         logo() {
-            return (this.layoutColorMode === 'dark') ? "images/logo-white.svg" : "images/logo.svg";
+            return (this.layoutColorMode === 'dark') ? "images/logo.svg" : "images/logo.svg";
         }
     },
     beforeUpdate() {
