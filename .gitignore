@@ -1,5 +1,5 @@
 /node_modules
-/public/hot
+/public
 /public/storage
 /storage/*.key
 /vendor
@@ -49,3 +49,8 @@ yarn-error.log*
 
 /public
 public/js/app.js
+package-lock.json
+composer.lock
+webpack.mix.js
+public/css/app.css
+.gitignore
