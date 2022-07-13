@@ -22,8 +22,8 @@
             <i class="pi pi-shopping-cart text-pink-500 text-xl"></i>
           </div>
         </div>
-        <span class="text-green-500 font-medium">24 new </span>
-        <span class="text-500">since last visit</span>
+        <span class="text-pink-500 font-medium">+26% </span>
+        <span class="text-500">since last week</span>
       </div>
     </div>
     <div class="col-12 lg:col-6 xl:col-3">
@@ -48,7 +48,7 @@
             <i class="pi pi-euro text-green-500 text-xl"></i>
           </div>
         </div>
-        <span class="text-green-500 font-medium">%52+ </span>
+        <span class="text-green-500 font-medium">+52% </span>
         <span class="text-500">since last week</span>
       </div>
     </div>
@@ -74,8 +74,8 @@
             <i class="pi pi-wallet text-purple-500 text-xl"></i>
           </div>
         </div>
-        <span class="text-green-500 font-medium">85 </span>
-        <span class="text-500">responded</span>
+        <!-- <span class="text-green-500 font-medium">85 </span>
+        <span class="text-500">responded</span> -->
       </div>
     </div>
 
